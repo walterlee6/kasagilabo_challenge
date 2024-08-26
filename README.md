@@ -1,7 +1,8 @@
-Programming Challenge 101
-=========================
+Kisagi Labo Programming Challenge
+=================================
 
 ### QUESTIONS
+#### CHALLENGE A
 1. Write a program that will generate four(4) types of printable random
 objects and store them in a single file, each object will be separated by
 a ",".  These are the 4 objects: alphabetical strings, real numbers,
@@ -9,29 +10,21 @@ integers, alphanumerics. The alphanumerics should contain a random
 number of spaces before and after it (not exceeding 10 spaces).
 The output should be 10MB in size.
 
-> Sample extracted output :
-
-> hisadfnnasd, 126263, assfdgsga12348fas, 13123.123,
-> lizierdjfklaasf, 123192u3kjwekhf, 89181811238,122,
-> nmarcysfa900jkifh  , 3.781, 2.11, ....
-
-
+#### CHALLENGE B
 2. Create a program that will read the generated file above and print to
 the console the object and its type. Spaces before and after the
 alphanumeric object must be stripped.
 
-> Sample output :
-
-> youruasdifafasd - alphabetical strings
-> 127371237 - integer
-> asdfka12348fas - alphanumeric
-> 13123.123 - real numbers
-> asjdfklasdjfklaasf - alphabetical strings
-> 123192u3kjwekhf - alphanumeric
+#### CHALLENGE C
+3. Dockerize Challenge B. Write a docker file so that it reads the output
+from Challenge A as an input. Once this container is started, the program
+in challenge B is executed to process this file. The output should be saved
+in a file and should be exposed to the Docker host machine.
 
 
 ### SOLUTION
 1. Run ```npm install```
-2. Run ```npm start``` and wait for awhile for it to generate the output in ```output/output.txt```
-3. Set the ```OUTPUT_SIZE (in line 6: writer/program.js)``` to ```10485760 (10MB), 1048576 (1MB), or 1024 (1KB)``` if desired.
-4. Run ```npm run reader``` and it will evaluate every results from before into ```output/result.txt```
+2. Run ```npm start``` and wait for awhile for it to generate the output in ```records/output.txt```
+4. Run ```sudo make build ``` and it will build the docker image 
+5. Run ``` sudo make up ``` and it will run ``` reader/program.js``` in the docker container
+6. Run ``` sudo make down ``` and it will shut down the container

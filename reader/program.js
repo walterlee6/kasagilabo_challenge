@@ -1,86 +1,85 @@
-var fs = require('fs')
-var _ = require('lodash')
+import { readFile, writeFile } from 'fs';
+import _ from 'lodash'; // Import lodash
 
-var contentArr = []
-var evaluatedArr = []
+let contentArr = [];
+let evaluatedArr = [];
 
 // evaluator object to chain the methods
-var evaluator = {
+const evaluator = {
   type: null,
   evaluatee: null,
   result: null,
 
   isAlphaNumeric: function(str) {
-    var evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim()
-    var code, i, len;
+    let evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim();
+    let code, i, len;
+
+    evaluatee = evaluatee.trim(); // Trim spaces around the evaluatee
 
     for (i = 0, len = evaluatee.length; i < len; i++) {
       code = evaluatee.charCodeAt(i);
       if (!(code > 47 && code < 58) && // numeric (0-9)
         !(code > 64 && code < 91) && // upper alpha (A-Z)
         !(code > 96 && code < 123)) { // lower alpha (a-z)
-
-        return this
+        return this;
       }
     }
-    this.type = 'alphanumeric'
-    this.result = evaluatee + ' - ' + this.type
-    return this
+    this.type = 'alphanumeric';
+    this.result = `${evaluatee}- ${this.type}`; // No extra spaces around evaluatee
+    return this;
   },
 
   isInteger: function(str) {
-    var evaluatee = this.evaluatee = (!str) ? this.evaluatee : str
-    var isInt = evaluatee % 1 === 0;
+    let evaluatee = this.evaluatee = (!str) ? this.evaluatee : str;
+    let isInt = evaluatee % 1 === 0;
 
     if (isInt) {
-      this.type = 'integer'
-      this.result = evaluatee + ' - ' + this.type
-      return this
+      this.type = 'integer';
+      this.result = `${evaluatee}- ${this.type}`;
+      return this;
     } else {
-
-      return this
+      return this;
     }
   },
 
   isRealNumber: function(str) {
-    var evaluatee = this.evaluatee = (!str) ? this.evaluatee : str
+    let evaluatee = this.evaluatee = (!str) ? this.evaluatee : str;
     if (!isNaN(parseFloat(evaluatee)) && isFinite(evaluatee)) {
-      this.type = 'real numbers'
-      this.result = evaluatee + ' - ' + this.type
-      return this
+      this.type = 'real numbers';
+      this.result = `${evaluatee}- ${this.type}`;
+      return this;
     } else {
-
-      return this
+      return this;
     }
   },
 
   isAlphabeticString: function(str) {
-    var evaluatee = this.evaluatee = (!str) ? this.evaluatee : str
-    var alphabetical = /^[a-zA-Z()]+$/.test(evaluatee)
+    let evaluatee = this.evaluatee = (!str) ? this.evaluatee : str;
+    let alphabetical = /^[a-zA-Z()]+$/.test(evaluatee);
     if (alphabetical) {
-      this.type = 'alphabetical strings'
-      this.result = evaluatee + ' - ' + this.type
-      return this
+      this.type = 'alphabetical strings';
+      this.result = `${evaluatee}- ${this.type}`;
+      return this;
     } else {
-      
-      return this
+      return this;
     }
   }
-}
+};
 
-fs.readFile('./output/output.txt', 'utf8', function(err, content) {
-  if (err) throw console.error('Error writing output', err);
+readFile('./records/output.txt', 'utf8', function(err, content) {
+  if (err) throw console.error('Error reading output', err);
 
-  contentArr = content.split(',')
+  contentArr = content.split(',');
 
+  // Process each item and push results to evaluatedArr
   _.forEach(contentArr, function(item) {
-    var result = evaluator.isAlphaNumeric(item).isAlphabeticString().isRealNumber().isInteger()
-    evaluatedArr.push(result.result)
-    console.log(result.result)
-  })
+    let result = evaluator.isAlphaNumeric(item).isAlphabeticString().isRealNumber().isInteger();
+    evaluatedArr.push(result.result);
+  });
 
-  fs.writeFile('./output/result.txt', evaluatedArr, function(err, content) {
+  // Join the results with commas to preserve the original format
+  writeFile('./records/result.txt', evaluatedArr.join(','), function(err) {
     if (err) throw console.error('Error writing evaluation', err);
-    console.log('It\'s evaluated in /output/result.txt!')
-  })
-})
+    console.log('It\'s evaluated in /records/result.txt!');
+  });
+});

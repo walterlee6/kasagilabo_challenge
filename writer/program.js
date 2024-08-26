@@ -1,82 +1,82 @@
-var fs = require('fs')
-var randomstring = require('randomstring')
-var Random = require('random-js')()
-var bytes = require('bytes');
+import { writeFile, mkdir } from 'fs/promises';
+import { generate } from 'randomstring';
+import Random from 'random-js';
+import bytes from 'bytes';
 
-var OUTPUT_SIZE = 10485760 // 10485760 (10MB), 1048576 (1MB), 1024 (1KB)
+const OUTPUT_SIZE = 10485760; // 10MB
+
+// Initialize Random object
+const random = new Random();
 
 // Random alphabetic generator
-var genAlphabeticString = function(limit) {
-  return randomstring.generate({
-    length: limit,
-    charset: 'alphabetic'
-  });
-}
+const genAlphabeticString = (limit) => generate({ length: limit, charset: 'alphabetic' });
 
 // Random real number generator
-var genRealNumber = function(limit) {
-  // limit is the length of the number, not the value
-  var realNumber = Random.real(-limit, limit)
-  var fixedDecimal = Random.integer(0, 18)
-  return realNumber.toFixed(fixedDecimal)
-}
+const genRealNumber = (limit) => {
+  const realNumber = random.real(-limit, limit);
+  const fixedDecimal = random.integer(0, 18);
+  return realNumber.toFixed(fixedDecimal).toString();
+};
 
 // Random integer generator
-var genInteger = function(limit) {
-  return Random.integer(1, limit)
-}
+const genInteger = (limit) => random.integer(1, limit).toString();
 
-// Random alphanumeric generator
-var genAlphanumeric = function(limit) {
-  // For generating random amount of spaces before and after
-  String.prototype.repeat = function() {
-    var randomize = Random.integer(0, 9)
-    return Array(randomize + 1).join(this);
-  };
-  var randSpaceBefore = " ".repeat()
-  var randSpaceAfter = " ".repeat()
-  var alphanumeric = randomstring.generate({
-    // to generate limited length based on spaces created
+// Random alphanumeric generator with spaces
+const genAlphanumeric = (limit) => {
+  const repeatSpaces = (count) => ' '.repeat(count);
+  const randSpaceBefore = repeatSpaces(random.integer(0, 10));
+  const randSpaceAfter = repeatSpaces(random.integer(0, 10));
+  const alphanumeric = generate({
     length: limit - (randSpaceBefore.length + randSpaceAfter.length),
     charset: 'alphanumeric'
   });
-
-  return randSpaceBefore + alphanumeric + randSpaceAfter
-}
+  return randSpaceBefore + alphanumeric + randSpaceAfter;
+};
 
 // Generate main output
-var genMainFile = function(genAlphabeticString, genRealNumber, genInteger, genAlphanumeric) {
-  var randomizers = [genAlphabeticString, genRealNumber, genInteger, genAlphanumeric]
-  var finalOutput = []
-  var iterator = 0
-  console.log('Generating output file of size ' + bytes(OUTPUT_SIZE) + ', please be patient..')
+const genMainFile = async (genAlphabeticString, genRealNumber, genInteger, genAlphanumeric) => {
+  const randomizers = [genAlphabeticString, genRealNumber, genInteger, genAlphanumeric];
+  const finalOutput = [];
+  let totalSize = 0;
 
-  while (finalOutput.toString().length < OUTPUT_SIZE) {
-    var limit = Random.integer(0, 100) // limit of each items (can be set to remaining filesize)
-    var actualLength = finalOutput.toString().length
-    var diff = OUTPUT_SIZE - actualLength - 1
-    if (diff == 0) {
-      return
-    }
-
-    // Don't exceed length of generated items
-    limit = (limit > diff) ? diff : limit
-
-    var randomize = Random.integer(0, 3)
-    var item = randomizers[randomize](limit)
-
-    while (limit != 0 && item.toString().length > limit) {
-      var randomize = Random.integer(0, 3)
-      var item = randomizers[randomize](limit)
-    }
-    finalOutput.push(item)
+  try {
+    await mkdir('./output', { recursive: true });
+  } catch (err) {
+    console.error('Error creating output directory:', err);
+    return;
   }
 
-  console.log('Final output size is:', bytes(finalOutput.toString().length))
-  fs.writeFile('./output/output.txt', finalOutput, function(err, content) {
-    if (err) throw console.error('Error writing output', err);
-    console.log('It\'s saved in /output/output.txt!')
-  })
-}
+  console.log('Generating output file of size ' + bytes(OUTPUT_SIZE) + ', please be patient..');
 
-genMainFile(genAlphabeticString, genRealNumber, genInteger, genAlphanumeric)
+  while (totalSize < OUTPUT_SIZE) {
+    const limit = random.integer(1, 100);
+    const randomizerIndex = random.integer(0, 3);
+    const item = randomizers[randomizerIndex](limit);
+    const itemSize = Buffer.byteLength(item);
+
+    if (totalSize + itemSize <= OUTPUT_SIZE) {
+      finalOutput.push(item);
+      totalSize += itemSize;
+    } else {
+      console.log('Output size exceeded. Ending generation.');
+      break;
+    }
+
+    // Optional: Log progress
+    if (finalOutput.length % 100 === 0) {
+      console.log(`Generated ${finalOutput.length} items, Current size: ${bytes(totalSize)}, Most recent item: ${item}`);
+    }
+  }
+
+  const finalString = finalOutput.join(',');
+  console.log('Final output size is:', bytes(totalSize));
+
+  try {
+    await writeFile('./records/output.txt', finalString);
+    console.log('It\'s saved in /records/output.txt!');
+  } catch (err) {
+    console.error('Error writing output:', err);
+  }
+};
+
+genMainFile(genAlphabeticString, genRealNumber, genInteger, genAlphanumeric);
