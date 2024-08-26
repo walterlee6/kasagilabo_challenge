@@ -1,4 +1,4 @@
-Kisagi Labo Programming Challenge
+Kasagi Labo Programming Challenge
 =================================
 
 ### QUESTIONS
