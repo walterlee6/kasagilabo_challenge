@@ -8,7 +8,9 @@ build:
 
 # Run the Docker container
 up:
-	docker run --name $(CONTAINER_NAME) -v $(shell pwd)/records:/usr/src/app/records -d $(IMAGE_NAME)
+	docker run --name $(CONTAINER_NAME) \
+		-v $(shell pwd)/records:/usr/src/app/records \
+		$(IMAGE_NAME)
 
 # Stop and remove the Docker container
 down:

@@ -75,6 +75,7 @@ readFile('./records/output.txt', 'utf8', function(err, content) {
   _.forEach(contentArr, function(item) {
     let result = evaluator.isAlphaNumeric(item).isAlphabeticString().isRealNumber().isInteger();
     evaluatedArr.push(result.result);
+    console.log(result.result);
   });
 
   // Join the results with commas to preserve the original format
