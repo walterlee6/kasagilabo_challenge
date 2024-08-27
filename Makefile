@@ -1,5 +1,4 @@
-# Docker image name
-
+# Docker image and container names
 IMAGE_NAME=kasagilabo_challenge
 CONTAINER_NAME=kasagilabo
 
@@ -9,8 +8,9 @@ build:
 
 # Run the Docker container
 up:
-	docker run --rm -v $(shell pwd)/records:/usr/src/app/records $(IMAGE_NAME)
+	docker run --name $(CONTAINER_NAME) -v $(shell pwd)/records:/usr/src/app/records -d $(IMAGE_NAME)
 
-# Remove the Docker container
+# Stop and remove the Docker container
 down:
-	@echo "Nothing to stop, the container is removed after it runs."
+	docker stop $(CONTAINER_NAME)
+	docker rm $(CONTAINER_NAME)
