@@ -24,12 +24,17 @@ const genInteger = (limit) => random.integer(1, limit).toString();
 // Random alphanumeric generator with spaces
 const genAlphanumeric = (limit) => {
   const repeatSpaces = (count) => ' '.repeat(count);
-  const randSpaceBefore = repeatSpaces(random.integer(0, 10));
-  const randSpaceAfter = repeatSpaces(random.integer(0, 10));
+  
+  // Ensure total spaces (before + after) do not exceed 10
+  const totalSpaces = random.integer(0, 10);
+  const randSpaceBefore = repeatSpaces(random.integer(0, totalSpaces));
+  const randSpaceAfter = repeatSpaces(totalSpaces - randSpaceBefore.length);
+  
   const alphanumeric = generate({
     length: limit - (randSpaceBefore.length + randSpaceAfter.length),
     charset: 'alphanumeric'
   });
+  
   return randSpaceBefore + alphanumeric + randSpaceAfter;
 };
 

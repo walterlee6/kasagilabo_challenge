@@ -6,9 +6,9 @@ let evaluatedArr = [];
 
 // evaluator object to chain the methods
 const evaluator = {
-  type: null,
   evaluatee: null,
   result: null,
+  type: null,
 
   isAlphaNumeric: function(str) {
     let evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim();
@@ -25,17 +25,17 @@ const evaluator = {
       }
     }
     this.type = 'alphanumeric';
-    this.result = `${evaluatee}- ${this.type}`; // No extra spaces around evaluatee
+    this.result = `${evaluatee}- ${typeof evaluatee}`;
     return this;
   },
 
   isInteger: function(str) {
-    let evaluatee = this.evaluatee = (!str) ? this.evaluatee : str;
-    let isInt = evaluatee % 1 === 0;
+    let evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim();
+    let parsedValue = parseInt(evaluatee, 10);
 
-    if (isInt) {
+    if (!isNaN(parsedValue) && parsedValue.toString() === evaluatee) {
       this.type = 'integer';
-      this.result = `${evaluatee}- ${this.type}`;
+      this.result = `${evaluatee}- ${typeof parsedValue}`;
       return this;
     } else {
       return this;
@@ -43,10 +43,12 @@ const evaluator = {
   },
 
   isRealNumber: function(str) {
-    let evaluatee = this.evaluatee = (!str) ? this.evaluatee : str;
-    if (!isNaN(parseFloat(evaluatee)) && isFinite(evaluatee)) {
-      this.type = 'real numbers';
-      this.result = `${evaluatee}- ${this.type}`;
+    let evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim();
+    let parsedValue = parseFloat(evaluatee);
+
+    if (!isNaN(parsedValue) && isFinite(parsedValue) && parsedValue.toString() === evaluatee) {
+      this.type = 'real number';
+      this.result = `${evaluatee}- ${typeof parsedValue}`;
       return this;
     } else {
       return this;
@@ -54,11 +56,11 @@ const evaluator = {
   },
 
   isAlphabeticString: function(str) {
-    let evaluatee = this.evaluatee = (!str) ? this.evaluatee : str;
-    let alphabetical = /^[a-zA-Z()]+$/.test(evaluatee);
+    let evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim();
+    let alphabetical = /^[a-zA-Z]+$/.test(evaluatee);
     if (alphabetical) {
-      this.type = 'alphabetical strings';
-      this.result = `${evaluatee}- ${this.type}`;
+      this.type = 'alphabetical string';
+      this.result = `${evaluatee}- ${typeof evaluatee}`;
       return this;
     } else {
       return this;
