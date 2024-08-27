@@ -23,8 +23,11 @@ in a file and should be exposed to the Docker host machine.
 
 
 ### SOLUTION
-1. Run ```npm install```
-2. Run ```npm start``` and wait for awhile for it to generate the output in ```records/output.txt```
-4. Run ```sudo make build ``` and it will build the docker image 
-5. Run ``` sudo make up ``` and it will run ``` reader/program.js``` in the docker container
-6. Run ``` sudo make down ``` and it will shut down the container
+1. Run
+2. ```
+   npm install
+   ```
+4. Run ```npm start``` and wait for awhile for it to generate the output in ```records/output.txt```
+5. Run ```sudo make build ``` and it will build the docker image 
+6. Run ``` sudo make up ``` and it will run ``` reader/program.js``` in the docker container
+7. Run ``` sudo make down ``` and it will shut down the container
