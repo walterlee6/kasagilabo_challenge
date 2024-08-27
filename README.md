@@ -23,11 +23,24 @@ in a file and should be exposed to the Docker host machine.
 
 
 ### SOLUTION
-1. Run
-2. ```
+1. Run this command to install all the dependencies
+    ```
    npm install
    ```
-4. Run ```npm start``` and wait for awhile for it to generate the output in ```records/output.txt```
-5. Run ```sudo make build ``` and it will build the docker image 
-6. Run ``` sudo make up ``` and it will run ``` reader/program.js``` in the docker container
-7. Run ``` sudo make down ``` and it will shut down the container
+2. Run and wait for awhile for it to generate the random output into ``` records/output.txt```
+   ```
+   npm start
+   ```
+3. It will build the docker image 
+   ```
+   sudo make build
+   ```
+4. It will run ```reader/program.js``` in the kasagilabo container
+   ```
+   sudo make up
+   ```
+5. It will shut down and remove the container
+   ```
+    sudo make down
+   ```
+   
