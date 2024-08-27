@@ -6,12 +6,15 @@
   "type": "module",
   "scripts": {
     "test": "npm test",
-    "start": "node ./writer/program.js"
+    "write": "node ./writer/program.js",
+    "read": "node ./reader/program.js"
   },
   "author": "walter",
   "license": "UNLICENSED",
   "dependencies": {
     "bytes": "^2.5.0",
+    "commander": "^12.1.0",
+    "express": "^4.19.2",
     "lodash": "^4.17.21",
     "random-js": "^1.0.8",
     "randomstring": "^1.3.0"

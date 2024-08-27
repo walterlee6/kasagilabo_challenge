@@ -29,18 +29,18 @@ in a file and should be exposed to the Docker host machine.
    ```
 2. Run and wait for awhile for it to generate the random output into ``` records/output.txt```
    ```
-   npm start
+   npm run write
    ```
-3. It will build the docker image 
+3. Run the program by printing from ```records/output.txt``` to ```records/result.txt``` for its  object and type
    ```
-   sudo make build
+   npm run read
    ```
-4. It will run ```reader/program.js``` in the kasagilabo container
+4. It is to build a docker image from a Dockerfile located in current directory```(.)```  and tag it with name ```kisagilabo```
    ```
-   sudo make up
+   sudo docker build . -t kasagilabo:latest   
    ```
-5. It will shut down and remove the container
+5. It starts the container from ```kasagilabo:latest``` and mounts the ```dockerized``` directory from your host machine to ```/kasagilabo/output``` in the container
    ```
-    sudo make down
+    docker run -v $PWD/dockerized:/kasagilabo/output kasagilabo:latest
    ```
    

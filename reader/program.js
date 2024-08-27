@@ -1,5 +1,5 @@
 import { readFile, writeFile } from 'fs';
-import _ from 'lodash'; // Import lodash
+import _ from 'lodash';
 
 let contentArr = [];
 let evaluatedArr = [];
@@ -10,7 +10,7 @@ const evaluator = {
   result: null,
   type: null,
 
-  isAlphaNumeric: function(str) {
+  isAlphaNumeric: function (str) {
     let evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim();
     let code, i, len;
 
@@ -29,7 +29,7 @@ const evaluator = {
     return this;
   },
 
-  isInteger: function(str) {
+  isInteger: function (str) {
     let evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim();
     let parsedValue = parseInt(evaluatee, 10);
 
@@ -42,7 +42,7 @@ const evaluator = {
     }
   },
 
-  isRealNumber: function(str) {
+  isRealNumber: function (str) {
     let evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim();
     let parsedValue = parseFloat(evaluatee);
 
@@ -55,7 +55,7 @@ const evaluator = {
     }
   },
 
-  isAlphabeticString: function(str) {
+  isAlphabeticString: function (str) {
     let evaluatee = this.evaluatee = (!str) ? this.evaluatee.trim() : str.trim();
     let alphabetical = /^[a-zA-Z]+$/.test(evaluatee);
     if (alphabetical) {
@@ -68,21 +68,29 @@ const evaluator = {
   }
 };
 
-readFile('./records/output.txt', 'utf8', function(err, content) {
-  if (err) throw console.error('Error reading output', err);
+readFile('./records/output.txt', 'utf8', (err, content) => {
+  if (err) {
+    console.error('Error reading output', err);
+  }
 
   contentArr = content.split(',');
 
   // Process each item and push results to evaluatedArr
-  _.forEach(contentArr, function(item) {
+  evaluatedArr = [];
+  _.forEach(contentArr, (item) => {
     let result = evaluator.isAlphaNumeric(item).isAlphabeticString().isRealNumber().isInteger();
     evaluatedArr.push(result.result);
     console.log(result.result);
   });
 
-  // Join the results with commas to preserve the original format
-  writeFile('./records/result.txt', evaluatedArr.join(','), function(err) {
-    if (err) throw console.error('Error writing evaluation', err);
+  // Write results to 'result.txt'
+  writeFile('./output/result.txt', evaluatedArr.join(','), (err) => {
+    if (err) {
+      console.error('Error writing evaluation', err);
+    }
     console.log('It\'s evaluated in /records/result.txt!');
+
   });
 });
+
+

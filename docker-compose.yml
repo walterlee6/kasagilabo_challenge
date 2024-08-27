@@ -1,8 +1,0 @@
-services:
-  reader:
-    build:
-      context: ./reader
-    volumes:
-      - ./records:/usr/src/app/records
-    command: ["node", "reader/program.js"]
-
