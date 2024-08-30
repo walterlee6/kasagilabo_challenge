@@ -46,7 +46,7 @@ const evaluator = {
 
     if (!isNaN(parsedValue) && isFinite(parsedValue) && parsedValue.toString() === evaluatee) {
       this.type = 'real number';
-      this.result = `${evaluatee}`;
+      this.result = `${evaluatee}- ${this.type}`;
       return this;
     } else {
       return this;
